@@ -4,6 +4,7 @@
 *.hbook
 bin/dsbatch
 bin/dsinter
+output
 
 # Whitelist files
 !thresholds.root
