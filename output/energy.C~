@@ -1,0 +1,15 @@
+#include "recon.h"
+
+
+void energy(){
+
+  Double_t distance, energy;
+  
+  cout<<"Please, insert desired position of resonance wrt cetre of gas target:\t";
+  cin>>distance;
+
+  energy = pos_to_E(distance);
+  
+  cout<<"Required energy:\n"<<energy<<endl;
+      
+}

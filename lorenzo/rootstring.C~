@@ -1,0 +1,23 @@
+
+
+
+
+
+
+
+
+
+
+
+  myapp->Run();
+  return 0;
+
+void rootstring(const char* mystring)
+{
+
+cout << "This is your string " << mystring << endl;
+
+
+}
+
+

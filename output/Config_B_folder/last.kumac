@@ -1,0 +1,7 @@
+*** Begin of history file: Wed Aug  1 09:19:03 2018
+exec bin/colour
+exec bin/targ
+exec bin/targ
+exec bin/targ_back
+exit
+*** End   of history file: Wed Aug  1 09:20:18 2018
