@@ -1144,38 +1144,16 @@ C.
 C      print*, 'ugeo_finger'
       CALL GPPART(0)
 C.
+      open(unit=2,file="config//aa.txt")
+
 C.*** Definition of scintillator material (0=BGO, 1=LaBr3, other value to remove detector from simulation)
-      DATA det_mate/
-     +  0, !1
-     +  0, !2
-     +  0, !3
-     +  0, !4
-     +  0, !5
-     +  0, !6
-     +  0, !7
-     +  0, !8
-     +  0, !9
-     +  0, !10
-     +  1, !11
-     +  1, !12
-     +  0, !13
-     +  0, !14
-     +  0, !15
-     +  0, !16
-     +  1, !17
-     +  1, !18
-     +  0, !19
-     +  0, !20
-     +  0, !21
-     +  0, !22
-     +  1, !23
-     +  1, !24
-     +  0, !25
-     +  0, !26
-     +  0, !27
-     +  0, !28
-     +  1, !29
-     +  1/ !30
+      DATA det_mate/30*0/
+      DO i = 1, 30
+         read(2,*) n
+         det_mate(i) = n
+      ENDDO
+      i=0
+      n=0
 C.
 C.*** Make the housing for BGO scintillator and PMT
 C.
