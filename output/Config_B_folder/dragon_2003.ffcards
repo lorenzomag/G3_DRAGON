@@ -259,7 +259,7 @@ C    MTUN x(cm) y(cm) dx(rad) dy(rad) separator tune(%/100)
 C MTUN -0.0 -0.0 -0.000 -0.000 0.02
 C    BEAM incoming beam energy (MeV=MeV/u*BeamMass)
 C
-C BEAM 11.7539
+BEAM 11.7539
 C
 C SCAL  1.75898  2.30782 
 C
@@ -453,6 +453,7 @@ C	       		make up the lead shield. Position origin is centre
 C			gas cell in dimension z. Looking at cell negative
 C			numbers move blocks right, positive numbers left
 C PBPS 0.0
+ICON 'B'
 STOP
 
 

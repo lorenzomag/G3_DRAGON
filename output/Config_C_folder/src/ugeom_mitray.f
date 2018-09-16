@@ -1031,7 +1031,7 @@ C.
       CALL gsatt(kname,'SEEN',1)
 C.
       CALL gspos(kname,1,'WRLD',pos(1),pos(2),pos(3),irot,'ONLY') 
-      print*, pos(1), pos(2), pos(3), 'TEST'
+      print*, kname, pos(1), pos(2), pos(3), 'TEST'
 C.
   999 RETURN
       END

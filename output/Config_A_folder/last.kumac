@@ -1,10 +1,3 @@
-*** Begin of history file: Wed Aug  1 09:15:36 2018
-exec bin/colour
-SAtt * fill 7
-exec bin/targ
-exec bin/targ_bacl
-exec bin/targ_back
-exec bin/targ
-exec bin/targ_back
-exit
-*** End   of history file: Wed Aug  1 09:18:31 2018
+*** Begin of history file: Thu Aug 30 09:46:21 2018
+exi
+*** End   of history file: Thu Aug 30 09:46:23 2018

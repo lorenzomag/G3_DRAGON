@@ -98,6 +98,9 @@ C.
       CALL ffkey('REFL',paint_absorption,1,'REAL')
 C. 
       CALL ffkey('ANAL',E_threshold,1,'REAL')
+C.
+C *** Gamma Detector Configuration (LP)
+      CALL ffkey('ICON',iconf,1,'CHARACTER')
     
 C.
       RETURN

@@ -1,22 +1,93 @@
-include "recon.h"
+//Will output three relative efficiency values per configuration: (To be expanded)
+ // #1 -> for Confx/ConfA
+ // #2 -> for Confxonly/ConfA
+ // #3 -> for Confxonly/Confx
+
+
+#include "recon.h"
 #include <string>
 #include <ctime>
 #include <iostream>
 #include <fstream>
-
-
+#include <sstream>
+#include <stdio.h>
+#include <ctype.h>
+#include "effic.h"
 
 using namespace std;
 
 
-void effic(char config = 'd'){
+void effic(char config=' '){
   
-  TString title,answer;
-  cout<<"Output ROOT Tree name: ";
-  cin>>title;
-  cout<<endl;
+  // Variable declarations
+  TString answer,exist,exist_config; // For creation of output file
+  const Int_t effic_config = 25; // Number of configuration different from A. ie B-Z
+  Float_t **efficiencies = 0; // Initialise efficiency array (Pointer to pointer for multidimentional array).
+  
+  Int_t config_int, value;
+  Int_t counter=0;
+  
+  
+  // Get configuration to be analysed. To analyse them all, input char '0'.
+  cout<<"Configuration to analyse (char) <default '0' for all configs>: ";
+  string iname;
+  getline(cin,iname);
+  if(cin.eof()) return 1;
+  else if(iname.empty()){
+    cout<<"Analysing all configurations..."<<endl;
+    config = '0';
+  }
+  else if(!iname.empty() && iname.length()==1){
+    istringstream stream(iname);
+    stream>>config;
+    if(config=='0'){
+      cout<<"Analysing all configurations..."<<endl; 
+    }
+    else if(isalpha(config)&&config!='a'&&config!='A'){
+      config = toupper(config);
+      exist_config = config;
+      // Check existence of configuration file if specific configuration was requested
+      exist = gSystem->FindFile("./","Config_"+exist_config+".root");
+      if(exist==""){
+	cout<<"ERROR: ROOT file missing for required configuration"<<endl;
+	return 1;
+      }
+    }
+    else{
+      cout<<"ERROR: Only input alphabetic letters different from a (or A), or the value 0 to analyse all configurations."<<endl;
+      return 1;
+    }
+  }
+  else{
+    cout<<"ERROR: Only input alphabetic letters different from a (or A), or the value 0 to analyse all configurations."<<endl;
+    return 1;
+  }
 
-  TString exist = gSystem->FindFile("./",title+".root");
+
+  
+  
+
+  // Get name of output ROOT file name
+  
+  cout<<"Output ROOT file name <default 'test'> : ";
+  string oname;
+  getline(cin,oname);
+  if(cin.eof()) return 1;
+  else if(oname.empty()) title="test";
+  else if(!oname.empty()){
+    istringstream stream(oname);
+    stream>>title;
+  }
+  else{
+    cout<<"ERROR: Invalid input"<<endl;
+    return 1;
+  }
+
+
+
+// Check existence of file and asks for permission to overwrite
+  
+  exist = gSystem->FindFile("./",title+".root");
   if(exist!=""){
     do{
       cout<<"Root file exists. Substitute? (y/n): ";
@@ -25,20 +96,13 @@ void effic(char config = 'd'){
     if(answer=="n") return;
   }
   
+
+  
+  // Create or reset output file. Then closes it.
   TFile *ofile = new TFile(title+".root","RECREATE","configurations");
   ofile->Close();
-
-  const Int_t effic_config = 25;
-  
-  //Will contain three relative efficiency value per configuration: (To be expanded)
-  // #1 -> for Confx/ConfA
-  // #2 -> for Confxonly/ConfA
-  // #3 -> for Confxonly/Confx
-
-  
-  
-  
-  Float_t **efficiencies = 0;
+  cout<<title<<".root"<<endl;
+  // Fills efficiencies array with value 999 for each entry. At the end, if an entry still contains 999, it will be ignored.. This will contain the three kinds of efficiencies described in the preamble for each configuration different from A.
   efficiencies = new Float_t*[3];
   for (Int_t i=0;i<3;i++){
     efficiencies[i] = new Float_t[25];
@@ -47,29 +111,24 @@ void effic(char config = 'd'){
     }
   }
 
-
-  char config_name [25];
-  Int_t config_int;
-  
-
-  if(config == 'd'){
-
+  if(config == '0'){           // d for default
     //runs all configurations in current folder
     for(config='B';config<='Z';config++){
       config_int = config-66;
-      analyse_config(efficiencies,config,config_int, title);
-      config_name[config_int]=config;
+      value = analyse_config(efficiencies,config,config_int, title);
+      if(value==2){
+	config_name[counter]=config;
+	counter++;
+      }
     }
-    
-   
-  
   }
   else{
     //runs configuration specified configuration, or send error
     //  analyse_config(config,title,efficiencies);
     config_int = config-66;
     analyse_config(efficiencies,config,config_int,title);
-    config_name[config_int]=config;
+    config_name[0]=config;
+
   }
 
 
@@ -126,6 +185,7 @@ void effic(char config = 'd'){
   mg->Add(comp2);
   mg->Add(comp3);
 
+ 
 
   /*
   TLegend *legend = new TLegend(0.1,0.7,0.48,0.9);
@@ -138,8 +198,9 @@ void effic(char config = 'd'){
   TCanvas *comp_canv = new TCanvas("comp","comp",600,500);
   gStyle->SetOptStat(0);
   mg->Draw("APL");
+  //  mg->GetHistogram()->GetYaxis()->SetRagneUser(0.,1.);
   // legend->Draw();
-  TLegend *leg = comp_canv->BuildLegend();
+  TLegend *leg = comp_canv->BuildLegend(0.5,0.5,0.9,0.7);
   leg->SetFillStyle(0);
 
 
@@ -148,6 +209,8 @@ void effic(char config = 'd'){
   
   ofile->Close();
 
+  
+ 
 
 }
 
@@ -170,7 +233,7 @@ void effic(char config = 'd'){
 
 
 
-void  analyse_config(Float_t **efficiencies,TString config  = "A", Int_t config_int, TString title){
+int  analyse_config(Float_t **efficiencies,TString config  = "A", Int_t config_int, TString title){
   
   
   TString inputFilePath = "~/geant_ruiz/output/";
@@ -180,6 +243,7 @@ void  analyse_config(Float_t **efficiencies,TString config  = "A", Int_t config_
   // Open all_BGO file
   TString exist = gSystem->FindFile(inputFilePath,inputFileName);
   if(exist=="") break;
+  
   
   TFile *fA = new TFile(inputFilePath+"Config_A.root");
   ;  if (fA->IsZombie()) return;
@@ -285,19 +349,21 @@ void  analyse_config(Float_t **efficiencies,TString config  = "A", Int_t config_
   TFile *ofile = new TFile(title+".root","UPDATE","Configurations");
   
   TCanvas *c1  = new TCanvas("Configuration"+config,"multipads",40,40,678,800);
-  c1->Divide(2,1,0.005,0.005);
+  /*  c1->Divide(2,1,0.005,0.005);
 
   c1->cd(1);
   a->Draw("nostack");
-
+  
 
   c1->cd(2);
 
   c->Draw("nostack");
-  /*
+  
+  
   c1->cd(3);
-  c->Draw("nostack");
   */
+  c->Draw("nostack");
+  
   
   c1->Write();
 
@@ -308,7 +374,7 @@ void  analyse_config(Float_t **efficiencies,TString config  = "A", Int_t config_
   Float_t IntXonly = e_gamma_Xonly->Integral();
 
   cout<<"<--------- Configuration "<<config<<" --------->"<<endl;
-  cout<<"Counts of Configuration A\t\t"<<IntA<<endl;
+  cout<<"s of Configuration A\t\t"<<IntA<<endl;
   cout<<"Counts of Configuration "<<config<<"\t\t"<<IntX<<endl;
   cout<<"Counts of Configuration "<<config<<" (only LaBr3)\t"<<IntXonly<<endl;
   cout<<"Relative efficiency\t\t\t"<<IntX/IntA<<endl;
@@ -320,6 +386,5 @@ void  analyse_config(Float_t **efficiencies,TString config  = "A", Int_t config_
   efficiencies[1][config_int]=IntXonly/IntA;
   efficiencies[2][config_int]=IntXonly/IntX;
   
-
-  
+  return 2;   
 }

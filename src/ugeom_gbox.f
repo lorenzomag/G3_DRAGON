@@ -1140,18 +1140,21 @@ C.
       INTEGER irot_front, irot_back, nxtrotm
 C.
       REAL the1, phi1, the2, phi2, the3, phi3
-      CHARACTER config
-
+      CHARACTER*5 config_file 
+      CHARACTER*4 extension
 C      print*, 'ugeo_finger'
       CALL GPPART(0)
 C.
-      print *, "Scintillator configuration: "
-      read(*,*) config
-      print*, config
-      open(unit=1,file="a.txt")
+      print*, "Scintillator configuration: ",iconf
+      extension = ".dat"
+      config_file = iconf//extension
+      open(unit=1,file=config_file)
+
 C.*** Definition of scintillator material (0=BGO, 1=LaBr3, other value to remove detector from simulation)
-      DATA det_mate/30*0/
-      
+      DATA det_mate/30*1/
+
+      read(1,*) 
+
       DO 10 i=1, 30
          read(1,*) det_mate(i)
  10   CONTINUE

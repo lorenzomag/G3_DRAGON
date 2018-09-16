@@ -16,6 +16,8 @@ C.
 C.
       REAL x_fngr(max_hexagon), y_fngr(max_hexagon), z_fngr(max_hexagon)
 C.
+      CHARACTER iconf
+C.
       INTEGER Nn
       PARAMETER ( Nn = 10 )
       INTEGER n_fngr(Nn,max_hexagon)
@@ -27,7 +29,7 @@ C.
      &                    hexagon_small_width, hexagon_large_width,
      &                    depth, wall, box_width, box_length, aprt,
      &                    col_length, col_collar_length,
-     &                    targtype, tubetype
+     &                    targtype, tubetype, iconf
 C.
       COMMON / fngr_geo / x_fngr, y_fngr, z_fngr, n_fngr
 C.

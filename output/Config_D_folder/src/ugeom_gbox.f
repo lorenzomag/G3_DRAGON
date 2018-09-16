@@ -1140,42 +1140,26 @@ C.
       INTEGER irot_front, irot_back, nxtrotm
 C.
       REAL the1, phi1, the2, phi2, the3, phi3
-
+      CHARACTER*5 config_file 
+      CHARACTER*4 extension
 C      print*, 'ugeo_finger'
       CALL GPPART(0)
 C.
+      print*, "Scintillator configuration: ",iconf
+      extension = ".dat"
+      config_file = iconf//extension
+      open(unit=1,file=config_file)
+
 C.*** Definition of scintillator material (0=BGO, 1=LaBr3, other value to remove detector from simulation)
-      DATA det_mate/
-     +  0, !1
-     +  0, !2
-     +  0, !3
-     +  0, !4
-     +  0, !5
-     +  0, !6
-     +  0, !7
-     +  0, !8
-     +  0, !9
-     +  0, !10
-     +  0, !11
-     +  0, !12
-     +  0, !13
-     +  0, !14
-     +  0, !15
-     +  0, !16
-     +  1, !17
-     +  1, !18
-     +  1, !19
-     +  1, !20
-     +  1, !21
-     +  1, !22
-     +  1, !23
-     +  1, !24
-     +  0, !25
-     +  0, !26
-     +  0, !27
-     +  0, !28
-     +  0, !29
-     +  0/ !30
+      DATA det_mate/30*1/
+
+      read(1,*) 
+
+      DO 10 i=1, 30
+         read(1,*) det_mate(i)
+ 10   CONTINUE
+C.
+      close(1)
 C.
 C.*** Make the housing for BGO scintillator and PMT
 C.
@@ -1324,7 +1308,7 @@ C.
 C.--> Fill square DETE with hexagonal housings HSNB
 C.
       icopy = 0
-      write(*,*) '--------- BGO/LaBr3 No, material, X, Y, Z: ---------'
+      write(*,*) '--------- BGO/LaBr3 No, X, Y, Z, material: ---------'
 C.
       k = 1
 C. Detector 1.
@@ -1341,11 +1325,13 @@ C.
       If(mask(icopy).eq.1)then
         If(det_mate(icopy).eq.0)then
          CALL gspos('HSNB',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+         write(*,*) icopy, -x, y, -z, " BGO"
         ELSEIF(det_mate(icopy).eq.1)then
          CALL gspos('HSNL',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+         write(*,*) icopy, -x, y, -z, " LaBr3"
         Endif 
       Endif 
-      write(*,*) icopy, det_mate(icopy), -x, y, -z 
+       
 C.
       k = 2
 C. Detector 2.
@@ -1362,11 +1348,13 @@ C.
       If(mask(icopy).eq.1)then
         If(det_mate(icopy).eq.0)then
          CALL gspos('HSNB',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+         write(*,*) icopy, -x, y, -z, " BGO"
         ELSEIF(det_mate(icopy).eq.1)then
          CALL gspos('HSNL',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+         write(*,*) icopy, -x, y, -z, " LaBr3"
         Endif 
       Endif 
-      write(*,*) icopy, det_mate(icopy), -x, y, -z
+      
 C. Detector 3.
       x =   d_mtl/2. + d_air(2)/2. - pmt_length/2. - 6.7
       y =   aprt + wall(3) + (1./2.)* hexagon_large_width+0.6
@@ -1381,11 +1369,13 @@ C.
       If(mask(icopy).eq.1)then
         If(det_mate(icopy).eq.0)then
          CALL gspos('HSNB',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+         write(*,*) icopy, -x, y, -z, " BGO"
         ELSEIF(det_mate(icopy).eq.1)then
          CALL gspos('HSNL',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+         write(*,*) icopy, -x, y, -z, " LaBr3"
         Endif 
       Endif 
-      write(*,*) icopy, det_mate(icopy), -x, y, -z
+C.
 C.
       k = 3
 C. Detector 4.
@@ -1402,11 +1392,13 @@ C.
       If(mask(icopy).eq.1)then
         If(det_mate(icopy).eq.0)then
          CALL gspos('HSNB',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+         write(*,*) icopy, -x, y, -z, " BGO"
         ELSEIF(det_mate(icopy).eq.1)then
          CALL gspos('HSNL',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+         write(*,*) icopy, -x, y, -z, " LaBr3"
         Endif 
       Endif 
-      write(*,*) icopy, det_mate(icopy), -x, y, -z
+C.
 C.
       k = 5
 C. Detector 5.
@@ -1422,11 +1414,13 @@ C.
       If(mask(icopy).eq.1)then
         If(det_mate(icopy).eq.0)then
          CALL gspos('HSNB',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+         write(*,*) icopy, -x, y, -z, " BGO"
         ELSEIF(det_mate(icopy).eq.1)then
          CALL gspos('HSNL',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+         write(*,*) icopy, -x, y, -z, " LaBr3"
         Endif 
       Endif 
-      write(*,*) icopy, det_mate(icopy), -x, y, -z 
+C. 
 C.
       k = 7
 C. Detector 6.
@@ -1442,11 +1436,13 @@ C.
       If(mask(icopy).eq.1)then
         If(det_mate(icopy).eq.0)then
          CALL gspos('HSNB',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+         write(*,*) icopy, -x, y, -z, " BGO"
         ELSEIF(det_mate(icopy).eq.1)then
          CALL gspos('HSNL',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+         write(*,*) icopy, -x, y, -z, " LaBr3"
         Endif 
       Endif 
-      write(*,*) icopy, det_mate(icopy), -x, y, -z
+C.
 C.
       k = 9
 C. Detector 7.
@@ -1462,11 +1458,13 @@ C.
       If(mask(icopy).eq.1)then
         If(det_mate(icopy).eq.0)then
           CALL gspos('HSNB',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+          write(*,*) icopy, -x, y, -z, " BGO"
         ELSEIF(det_mate(icopy).eq.1)then
         CALL gspos('HSNL',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+        write(*,*) icopy, -x, y, -z, " LaBr3"
         Endif 
       Endif 
-      write(*,*) icopy, det_mate(icopy), -x, y, -z 
+C. 
 C.
       k = 10
 C. Detector 8.
@@ -1482,11 +1480,13 @@ C.
       If(mask(icopy).eq.1)then
         If(det_mate(icopy).eq.0)then
          CALL gspos('HSNB',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+         write(*,*) icopy, -x, y, -z, " BGO"
         ELSEIF(det_mate(icopy).eq.1)then
          CALL gspos('HSNL',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+         write(*,*) icopy, -x, y, -z, " LaBr3"
         Endif 
       Endif 
-      write(*,*) icopy, det_mate(icopy), -x, y, -z
+C.
 C. Detector 9.
       x =   d_mtl/2. + d_air(2)/2. - pmt_length/2.
       y =   aprt + wall(3) + (1./2.)* hexagon_large_width+0.6
@@ -1501,11 +1501,13 @@ C.
       If(mask(icopy).eq.1)then
         If(det_mate(icopy).eq.0)then
          CALL gspos('HSNB',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+         write(*,*) icopy, -x, y, -z, " BGO"
         ELSEIF(det_mate(icopy).eq.1)then
          CALL gspos('HSNL',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+         write(*,*) icopy, -x, y, -z, " LaBr3"
         Endif 
       Endif 
-      write(*,*) icopy, det_mate(icopy), -x, y, -z 
+      
 C.
       k = 11
 C. Detector 10.
@@ -1522,11 +1524,14 @@ C.
       If(mask(icopy).eq.1)then
         If(det_mate(icopy).eq.0)then
          CALL gspos('HSNB',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+         write(*,*) icopy, -x, y, -z, " BGO"
         ELSEIF(det_mate(icopy).eq.1)then
          CALL gspos('HSNL',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+         write(*,*) icopy, -x, y, -z, " LaBr3"
         Endif 
       Endif 
-      write(*,*) icopy, det_mate(icopy), -x, y, -z
+C      
+C
 C. Detectors 11 through 30.
       Do k = 9, 3, -1
 C.
@@ -1557,11 +1562,13 @@ C.
          If(mask(icopy).eq.1)then
           If(det_mate(icopy).eq.0)then
            CALL gspos('HSNB',icopy,'DETE',-x,y,-z,irot_back,'ONLY')
+           write(*,*) icopy, -x, y, -z, " BGO"
         ELSEIF(det_mate(icopy).eq.1)then
          CALL gspos('HSNL',icopy,'DETE',-x,y,-z,irot_back,'ONLY')
+         write(*,*) icopy, -x, y, -z, " LaBr3"
         Endif 
       Endif 
-      write(*,*) icopy, det_mate(icopy), -x, y, -z
+      
 C.
             x = -x
 C.
@@ -1574,11 +1581,13 @@ C.
             If(mask(icopy).eq.1)then
         If(det_mate(icopy).eq.0)then
           CALL gspos('HSNB',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+          write(*,*) icopy, -x, y, -z, " BGO"
         ELSEIF(det_mate(icopy).eq.1)then
         CALL gspos('HSNL',icopy,'DETE',-x,y,-z,irot_front,'ONLY')
+        write(*,*) icopy, -x, y, -z, " LaBr3"
         Endif 
       Endif 
-      write(*,*) icopy, det_mate(icopy), -x, y, -z
+      
 C.
          Enddo
 C.

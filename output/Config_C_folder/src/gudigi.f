@@ -515,8 +515,8 @@ C     For debugging purposes
 C      print*, nhits
 C      print*, numbv
 C      print*, e_bgos_deposit
-C.      print*, e_bgos_deposit_total
-C      print*, num_bgos_hit
+C       print*, e_bgos_deposit_total
+C       print*, num_bgos_hit
 C.
 C *** nelem:  Total Number of Scintillator hits
 C     
