@@ -1,0 +1,129 @@
+#include <iostream>
+#include <sstream>
+#include <fstream>
+
+using namespace std;
+
+void moveconfig();
+void movefile();
+void copyfile();
+
+void macro(){
+  TString filename,configstr;
+
+  
+  gROOT->ProcessLine(".x effic.C");
+
+  filename = title+".root";
+
+  TFile *file = new TFile(filename);
+
+  TObject *obj;
+  TKey *key;
+  TIter next(file->GetListOfKeys());
+  TString figname;
+  while((key=(TKey*)next())){
+    obj=file->Get(key->GetName());
+    figname = key->GetName();
+    obj->Print(figname+".eps");
+  }
+
+ 
+  // Creation of LaTeX file
+ 
+  std::ofstream texfile;
+  
+  gROOT->ProcessLine(".! cp base.tex "+title+".tex");
+  texfile.open(title+".tex",std::ios_base::app);
+  
+
+
+
+  gROOT->ProcessLine(".! mkdir "+title);
+
+  gSystem->cd("../");
+  TPython::LoadMacro("configcount.py");
+  gSystem->cd("output");
+
+  moveconfig('A');
+  for(Int_t i; i<25; i++){
+    if(config_name[i]!=0){
+      moveconfig(config_name[i]);
+      if(config_name[i]!='A' && config_name[i]!='B'){
+	configstr=config_name[i];
+	texfile << "
+\\newconfig{"+configstr+"}
+";
+      }
+    }
+  }
+
+  texfile <<"\\end{document}";
+  texfile.close();
+  
+ 
+  copyfile("Tagline.eps");
+  copyfile("Tlogo.eps");
+  movefile(title+".tex");
+  movefile("../configs.dat");
+  movefile("comp.eps");
+  
+//  gROOT->ProcessLine(".! zip "+title+".zip "+title+"/*");
+//  gROOT->ProcessLine(".! rm -rf "+title);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void moveconfig(TString configstr){
+  FileName = "../"+configstr+".dat";
+  copyfile(FileName);
+  FileName = "images_config/Config"+configstr+".png";
+  copyfile(FileName);
+  FileName = "images_config/Config"+configstr+"b.png";
+  copyfile(FileName);
+  if(configstr!="A"){
+    FileName = "Configuration"+configstr+".eps";
+    movefile(FileName);
+  }
+}
+
+void movefile(TString FileName){
+
+  TString FilePath = "~/geant_ruiz/output/";
+  TString exist,filename;
+  filename = FileName;
+
+  exist = gSystem->FindFile(FilePath,FileName);
+  if(exist!="") gROOT->ProcessLine(".! mv "+filename+" ./"+title);
+  else cout<<"File "<<filename<<" has to be created and moved to folder ./"<<title<<endl;
+  
+}
+
+void copyfile(TString FileName){
+
+  TString FilePath = "~/geant_ruiz/output/";
+  TString exist,filename;
+  filename = FileName;
+   
+  exist = gSystem->FindFile(FilePath,FileName);
+  if(exist!="") gROOT->ProcessLine(".! cp "+filename+" ./"+title);
+  else cout<<"File "<<filename<<" has to be created and copied to folder ./"<<title<<endl;
+  
+}
