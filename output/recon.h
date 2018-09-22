@@ -13,7 +13,7 @@ Float_t half_thickness = 6.14136028; // half-thickness of gas target
 Double_t Resonance_energy = 11.41164; //for 23Mg(p,g)24Al
 Float_t E_i;
 
-
+Float_t RMS;
 
 
 

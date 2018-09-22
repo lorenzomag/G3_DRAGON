@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include "recon.h"
 
 using namespace std;
 
@@ -65,6 +66,7 @@ void macro(){
   copyfile("Tagline.eps");
   copyfile("Tlogo.eps");
   movefile(title+".tex");
+  movefile("RMS.dat");
   movefile("../configs.dat");
   movefile("comp.eps");
   

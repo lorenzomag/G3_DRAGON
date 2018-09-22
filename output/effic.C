@@ -93,7 +93,7 @@ void effic(char config=' '){
       cout<<"Root file exists. Substitute? (y/n): ";
       cin>>answer;
     }while(answer!="y"&answer!="n");
-    if(answer=="n") return;
+    if(answer=="n") std::exit(0);
   }
   
 
@@ -236,6 +236,7 @@ void effic(char config=' '){
 int  analyse_config(Float_t **efficiencies,TString config  = "A", Int_t config_int, TString title){
   
   
+
   TString inputFilePath = "~/geant_ruiz/output/";
  
   TString & inputFileName = "Config_"+config+".root";
@@ -246,8 +247,16 @@ int  analyse_config(Float_t **efficiencies,TString config  = "A", Int_t config_i
   
   
   TFile *fA = new TFile(inputFilePath+"Config_A.root");
-  ;  if (fA->IsZombie()) return;
+  if (fA->IsZombie()) return;
 
+  gROOT->ProcessLine(".x recon.C(\"Config_"+config+".root\")");
+  std::ofstream datfile;
+
+  datfile.open("RMS.dat",std::ios_base::app);
+  datfile<<"RMS for configuration "<<config<<", "<<RMS<<endl;
+
+  
+  
   Float_t e_bgo_A;
 
   // Open trees and branches
